@@ -13,7 +13,41 @@ export class App extends Component {
     galleryItems: [],
     isLoading: false,
     maxPages: 1,
+    page: 1,
+    query: '',
+    isSubmite: false,
   };
+
+  async componentDidUpdate(pProps, pState) {
+    if (pState.page !== this.state.page || pState.query !== this.state.query) {
+      searchParams.q = this.state.query;
+      searchParams.page = this.state.page;
+
+      this.toggleLoading();
+      const res = await getGallerydData(searchParams);
+      this.toggleLoading();
+
+      if (!res) return;
+
+      if (!res.hits.length) {
+        Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+        return;
+      }
+
+      const maxPages = Math.ceil(res.totalHits / searchParams.per_page);
+
+      this.setState(prev => ({
+        maxPages,
+        galleryItems: [...prev.galleryItems, ...res.hits],
+      }));
+
+      if (this.state.isSubmite) {
+        Notify.success(`Hooray! We found ${res.totalHits} images.`);
+      }
+    }
+  }
 
   toggleLoading = () => {
     this.setState(prev => {
@@ -21,34 +55,19 @@ export class App extends Component {
     });
   };
 
-  handleSubmite = async query => {
-    await this.setState({ galleryItems: [], maxPages: 1 });
-    searchParams.q = query;
-    searchParams.page = 1;
-    this.toggleLoading();
-    const res = await getGallerydData(searchParams);
-    this.toggleLoading();
-    if (!res) return;
-
-    if (!res.hits.length) {
-      Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
-      return;
-    }
-    const maxPages = Math.ceil(res?.totalHits / searchParams.per_page);
-    this.setState({ maxPages, galleryItems: [...res?.hits] });
-
-    Notify.success(`Hooray! We found ${res.totalHits} images.`);
+  handleSubmite = query => {
+    this.setState({
+      galleryItems: [],
+      maxPages: 1,
+      page: 1,
+      isSubmite: true,
+      query,
+    });
   };
 
-  handleLoadMore = async () => {
-    searchParams.page += 1;
-    this.toggleLoading();
-    const res = await getGallerydData(searchParams);
-    this.toggleLoading();
+  handleLoadMore = () => {
     this.setState(prev => {
-      return { galleryItems: [...prev.galleryItems, ...res.hits] };
+      return { page: prev.page + 1, isSubmite: false };
     });
   };
 

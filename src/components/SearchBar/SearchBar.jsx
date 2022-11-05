@@ -10,6 +10,11 @@ export class SearchBar extends Component {
     prevSearchQuery: '',
   };
 
+  static propTypes = {
+    handleSubmite: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+  };
+
   handleSearchInput = e => {
     this.setState({ search: e.target.value });
   };
@@ -53,7 +58,7 @@ export class SearchBar extends Component {
     );
   }
 }
-SearchBar.propTypes = {
-  handleSubmite: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-};
+// SearchBar.propTypes = {
+//   handleSubmite: PropTypes.func.isRequired,
+//   isLoading: PropTypes.func.isRequired,
+// };

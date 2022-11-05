@@ -12,6 +12,10 @@ export class ImageGallery extends Component {
     tags: '',
   };
 
+  static propTypes = {
+    galleryItems: PropTypes.arrayOf(PropTypes.object),
+  };
+
   onImgClick = (imgURL, tags) => {
     this.setState({ imgURL, tags });
   };
@@ -52,6 +56,6 @@ export class ImageGallery extends Component {
   }
 }
 
-ImageGallery.propTypes = {
-  galleryItems: PropTypes.arrayOf(PropTypes.object),
-};
+// ImageGallery.propTypes = {
+//   galleryItems: PropTypes.arrayOf(PropTypes.object),
+// };

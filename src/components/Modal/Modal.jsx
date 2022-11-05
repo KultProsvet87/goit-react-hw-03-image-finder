@@ -2,6 +2,12 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export class Modal extends Component {
+  static propTypes = {
+    imgURL: PropTypes.string.isRequired,
+    tags: PropTypes.string,
+    modalToggle: PropTypes.func.isRequired,
+  };
+
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
   }
@@ -29,8 +35,8 @@ export class Modal extends Component {
   }
 }
 
-Modal.propTypes = {
-  imgURL: PropTypes.string.isRequired,
-  tags: PropTypes.string,
-  modalToggle: PropTypes.func.isRequired,
-};
+// Modal.propTypes = {
+//   imgURL: PropTypes.string.isRequired,
+//   tags: PropTypes.string,
+//   modalToggle: PropTypes.func.isRequired,
+// };
